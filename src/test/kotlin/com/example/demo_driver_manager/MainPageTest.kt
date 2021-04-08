@@ -52,9 +52,6 @@ class MainPageTest {
 //        firefoxDriver.get("http://localhost:3000/")
 //
 
-        landingPage = LandingPage(chromeDriver)
-        legalNoticePage = LegalNoticePage(chromeDriver)
-        enterPinCodePage = EnterPinCodePage(chromeDriver)
     }
 
     @AfterMethod
@@ -65,9 +62,12 @@ class MainPageTest {
 
     @Test
     fun landingPageTest() {
+        landingPage = LandingPage(chromeDriver)
         landingPage.clickJoinArena()
+        legalNoticePage = LegalNoticePage(chromeDriver)
         legalNoticePage.clickContinue()
-        enterPinCodePage.clickFirstInput()
+        enterPinCodePage = EnterPinCodePage(chromeDriver)
+        enterPinCodePage.inputCode(listOf("1", "2", "3", "4"));
 
 //        assertEquals(searchPageField.getAttribute("value"), "Selenium")
     }
