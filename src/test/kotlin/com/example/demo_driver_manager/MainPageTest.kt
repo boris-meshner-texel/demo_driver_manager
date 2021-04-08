@@ -12,25 +12,27 @@ import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.interactions.Actions
 import java.util.concurrent.TimeUnit
 
+val BASE_URL = "http://localhost:3000";
+
 class MainPageTest {
     private lateinit var chromeDriver: WebDriver
-    private lateinit var firefoxDriver: WebDriver
+//    private lateinit var firefoxDriver: WebDriver
 
-    private lateinit var mainPage: MainPage
+    private lateinit var landingPage: LandingPage
+    private lateinit var legalNoticePage: LegalNoticePage
+    private lateinit var enterPinCodePage: EnterPinCodePage
 
 
      fun chrome(): WebDriver {
         WebDriverManager.chromedriver().setup()
          //ChromeOptions chromeOptions...
         return ChromeDriver() //@todo add options
-
-
     }
-
-    fun firefox () : WebDriver {
-        WebDriverManager.firefoxdriver().setup()
-        return FirefoxDriver() //@todo add options
-    }
+//
+//    fun firefox () : WebDriver {
+//        WebDriverManager.firefoxdriver().setup()
+//        return FirefoxDriver() //@todo add options
+//    }
 
 
 
@@ -40,56 +42,57 @@ class MainPageTest {
         chromeDriver = chrome()
         chromeDriver.manage().window().maximize()
         chromeDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-        chromeDriver.get("http://localhost:3000/")
+        chromeDriver.get(BASE_URL);
 
-        firefoxDriver = firefox()
-        firefoxDriver.manage().window().maximize()
-        firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-        firefoxDriver.get("http://localhost:3000/")
-
-
-
-
-        mainPage = MainPage(chromeDriver)
-
+//        firefoxDriver = firefox()
+//        firefoxDriver.manage().window().maximize()
+//        firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+//        firefoxDriver.get("http://localhost:3000/")
+//
 
     }
 
     @AfterMethod
     fun tearDown() {
         chromeDriver.quit()
-        firefoxDriver.quit()
+//        firefoxDriver.quit()
     }
 
     @Test
-    fun search() {
-        mainPage.searchButton.click()
+    fun landingPageTest() {
+        landingPage = LandingPage(chromeDriver)
+        landingPage.clickJoinArena()
+        legalNoticePage = LegalNoticePage(chromeDriver)
+        legalNoticePage.clickContinue()
+        enterPinCodePage = EnterPinCodePage(chromeDriver)
+        enterPinCodePage.inputCode(listOf("1", "2", "3", "4"));
 
-        val searchField = chromeDriver.findElement(By.id("header-search"))
-        searchField.sendKeys("Selenium")
-        val submitButton = chromeDriver.findElement(By.xpath("//button[@type='submit' and text()='Search']"))
-        submitButton.click()
+        chromeDriver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS)
 
-        val searchPageField = chromeDriver.findElement(By.className("js-search-input"))
-        assertEquals(searchPageField.getAttribute("value"), "Selenium")
+        //timer needed?
+
+        val pinErrorLabel = "Please check the Code and try again."
+        val isError = chromeDriver.findElement(By.cssSelector("[data-automation-id='check-pin-error-msg']")).text.equals(pinErrorLabel)
+
+        assert(isError);
     }
 
-    @Test
-    fun toolsMenu() {
-        Actions(chromeDriver)
-            .moveToElement(mainPage.toolsMenu)
-            .perform()
-
-        val menuPopup = chromeDriver.findElement(By.className("menu-main__popup-wrapper"))
-        assertTrue(menuPopup.isDisplayed)
-    }
-
-    @Test
-    fun navigationToAllTools() {
-        mainPage.seeAllToolsButton.click()
-
-        val productsList = chromeDriver.findElement(By.className("products-list"))
-        assertTrue(productsList.isDisplayed)
-        assertEquals(chromeDriver.title, "All Developer Tools and Products by JetBrains")
-    }
+//    @Test
+//    fun toolsMenu() {
+//        Actions(chromeDriver)
+//            .moveToElement(mainPage.toolsMenu)
+//            .perform()
+//
+//        val menuPopup = chromeDriver.findElement(By.className("menu-main__popup-wrapper"))
+//        assertTrue(menuPopup.isDisplayed)
+//    }
+//
+//    @Test
+//    fun navigationToAllTools() {
+//        mainPage.seeAllToolsButton.click()
+//
+//        val productsList = chromeDriver.findElement(By.className("products-list"))
+//        assertTrue(productsList.isDisplayed)
+//        assertEquals(chromeDriver.title, "All Developer Tools and Products by JetBrains")
+//    }
 }
