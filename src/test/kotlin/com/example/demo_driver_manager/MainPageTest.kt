@@ -27,8 +27,6 @@ class MainPageTest {
         WebDriverManager.chromedriver().setup()
          //ChromeOptions chromeOptions...
         return ChromeDriver() //@todo add options
-
-
     }
 //
 //    fun firefox () : WebDriver {
@@ -56,7 +54,7 @@ class MainPageTest {
 
     @AfterMethod
     fun tearDown() {
-//        chromeDriver.quit()
+        chromeDriver.quit()
 //        firefoxDriver.quit()
     }
 
@@ -69,7 +67,14 @@ class MainPageTest {
         enterPinCodePage = EnterPinCodePage(chromeDriver)
         enterPinCodePage.inputCode(listOf("1", "2", "3", "4"));
 
-//        assertEquals(searchPageField.getAttribute("value"), "Selenium")
+        chromeDriver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS)
+
+        //timer needed?
+
+        val pinErrorLabel = "Please check the Code and try again."
+        val isError = chromeDriver.findElement(By.cssSelector("[data-automation-id='check-pin-error-msg']")).text.equals(pinErrorLabel)
+
+        assert(isError);
     }
 
 //    @Test
