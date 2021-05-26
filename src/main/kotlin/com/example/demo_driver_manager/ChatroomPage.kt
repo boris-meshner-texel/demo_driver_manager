@@ -60,7 +60,7 @@ class ChatroomPage(driver: WebDriver) {
         this.shareButton.click()
     }
 
-    fun clickParticipantsButton () {
+    fun clickShowTrayButton () {
         this.participantsButton.click()
     }
 

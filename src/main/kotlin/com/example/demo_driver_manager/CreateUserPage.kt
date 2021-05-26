@@ -19,6 +19,9 @@ class CreateUserPage(driver: WebDriver) {
     @FindBy(css = "[data-automation-id='create-user-text']")
     lateinit var mainText: WebElement
 
+    @FindBy(css = "[data-automation-id='create-user-help-btn']")
+    lateinit var createUserHelpBtn: WebElement
+
     init {
         PageFactory.initElements(driver, this)
     }
@@ -29,5 +32,9 @@ class CreateUserPage(driver: WebDriver) {
 
     fun clickJoinButton () {
         this.createUserJoinBtn.click()
+    }
+
+    fun clickHelpButton () {
+        this.createUserHelpBtn.click()
     }
 }
